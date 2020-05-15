@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  game: one
+  coord: [2, 6]
+  state: bomb
+
+two:
+  game: one
+  coord: [9, 8]
+  state: bomb
+
+three:
+  game: one
+  coord: [5, 7]
+  state: bomb
+

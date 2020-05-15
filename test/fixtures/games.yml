@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  rows: 8
+  cols: 7
+  finished: false
+  result: playing
+
+two:
+  user: two
+  rows: 8
+  cols: 7
+  finished: false
+  result: playing
