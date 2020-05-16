@@ -4,14 +4,17 @@ one:
   game: one
   coord: [2, 6]
   state: bomb
+  bomb: false
 
 two:
   game: one
   coord: [9, 8]
   state: bomb
+  bomb: false
 
 three:
   game: one
   coord: [5, 7]
   state: bomb
+  bomb: true
 

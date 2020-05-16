@@ -4,6 +4,7 @@ one:
   user: one
   rows: 8
   cols: 7
+  bombs: 20
   finished: false
   result: playing
 
@@ -11,5 +12,6 @@ two:
   user: two
   rows: 8
   cols: 7
+  bombs: 20
   finished: false
   result: playing
