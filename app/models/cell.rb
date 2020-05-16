@@ -15,6 +15,8 @@ class Cell < ApplicationRecord
     end
   end
 
+  after_commit :check_bomb, on: [:update]
+
   # Changes the state to :flag.
   def flag!
     update!(state: :flag)
@@ -23,10 +25,14 @@ class Cell < ApplicationRecord
   # Updates state to :exploded_bomb or bomb_neighbors_count
   # if bomb_neighbors_count is 0, it also evaluates them.
   def reveal!
+    return unless hidden?
+
     new_state = bomb ? :exploded_bomb : bomb_neighbors_count
     update!(state: new_state)
 
-    neighbors.each(&:reveal!) if bomb_neighbors_count.zero?
+    neighbors
+      .select { |n| !n.nil? }
+      .each(&:reveal!) if bomb_neighbors_count.zero?
   end
 
   # Returns the number of neighbors that are a bomb.
@@ -45,6 +51,18 @@ class Cell < ApplicationRecord
     neighbors.filter { |neighbor| neighbor != self }
   end
 
+  def hidden?
+    state == 'hidden'
+  end
+
+  def flag?
+    state == 'flag'
+  end
+
+  def exploded_bomb?
+    state == 'exploded_bomb'
+  end
+
   private
 
   # Returns neighbors range in coord.
@@ -53,5 +71,9 @@ class Cell < ApplicationRecord
       x: (coord[0] - 1 .. coord[0] + 1),
       y: (coord[1] - 1 .. coord[1] + 1)
     }
+  end
+
+  def check_bomb
+    game.over! if exploded_bomb?
   end
 end
