@@ -34,3 +34,4 @@
 # Ignore application.yml
 /config/application.yml
 coverage
+doc
