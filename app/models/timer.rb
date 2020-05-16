@@ -2,12 +2,12 @@ class Timer < ApplicationRecord
   belongs_to :game
 
   # Set the current time to started_at.
-  def start
+  def start!
     update!(started_at: DateTime.now) if started_at.nil?
   end
 
   # Set the current time to stopped_at.
-  def stop
+  def stop!
     update!(stopped_at: DateTime.now) if started_at && stopped_at.nil?
   end
 
