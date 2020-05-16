@@ -14,20 +14,20 @@ class TimerTest < ActiveSupport::TestCase
   end
 
   test 'the timer starts when the method start is called' do
-    @timer.start
+    @timer.start!
 
     assert_not @timer.started_at.nil?
   end
 
   test 'the timer stops when the method stop is called' do
-    @timer.start
-    @timer.stop
+    @timer.start!
+    @timer.stop!
 
     assert_not @timer.stopped_at.nil?
   end
 
   test 'the timer cannot be stopped if it has not been started before' do
-    @timer.stop
+    @timer.stop!
 
     assert @timer.stopped_at.nil?
   end
@@ -37,7 +37,7 @@ class TimerTest < ActiveSupport::TestCase
   end
 
   test 'the timer shows the current seconds' do
-    @timer.start
+    @timer.start!
     sleep 0.03
 
     assert @timer.time >= 0.03
@@ -45,22 +45,22 @@ class TimerTest < ActiveSupport::TestCase
   end
 
   test 'the timer shows the difference between stopped_at and started_at' do
-    @timer.start
+    @timer.start!
     sleep 0.05
-    @timer.stop
+    @timer.stop!
 
     assert @timer.time == @timer.stopped_at - @timer.started_at
   end
 
   test 'the timer indicates when the timer is not finished' do
-    @timer.start
+    @timer.start!
 
     assert_not @timer.finished?
   end
 
   test 'the timer indicates when the timer is finished' do
-    @timer.start
-    @timer.stop
+    @timer.start!
+    @timer.stop!
 
     assert @timer.finished?
   end
