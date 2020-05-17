@@ -1,7 +1,7 @@
 class Game < ApplicationRecord
   belongs_to :user
-  has_many :cells
-  has_many :timers
+  has_many :cells, dependent: :delete_all
+  has_many :timers, dependent: :delete_all
 
   validates :result, inclusion: { in: %w(playing winner looser) }
   validates :bombs, numericality: { greater_than: 1 }
