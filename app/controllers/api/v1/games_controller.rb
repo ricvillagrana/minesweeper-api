@@ -15,7 +15,7 @@ class Api::V1::GamesController < ApplicationController
     render json: { game: current_user.games.find(params[:id]) }
   end
 
-  # POST /api/v1/games/reveal
+  # POST /api/v1/games/:game_id/reveal
   #
   # receives an cell coord, a game_id and reveal it,
   # returns an new array board.
@@ -28,7 +28,7 @@ class Api::V1::GamesController < ApplicationController
     render json: { error: 'Cannot reveal that coordinates' }, status: :bad_request
   end
 
-  # POST /api/v1/games/flag
+  # POST /api/v1/games/:game_id/flag
   #
   # receives an cell coord, a game_id and flag it,
   # returns an new array board.
