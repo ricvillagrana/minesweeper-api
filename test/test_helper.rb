@@ -2,7 +2,7 @@ require 'simplecov'
 SimpleCov.start :rails
 
 SimpleCov.configure do
-  load_adapter 'test_frameworks'
+  load_profile 'test_frameworks'
 
   add_group('Services', 'app/services')
   add_group('Builders', 'app/builders')
