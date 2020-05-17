@@ -15,6 +15,7 @@ class Game < ApplicationRecord
 
     initial_cell.update!(state: :flag)
     populate_bombs!
+    initial_cell.update!(state: :hidden)
     initial_cell.reveal!
   end
 

@@ -15,6 +15,23 @@ class Api::V1::GamesController < ApplicationController
     render json: { game: current_user.games.find(params[:id]) }
   end
 
+  # POST /api/v1/games/reveal
+  #
+  # receives an cell coord, a game_id and reveal it,
+  # returns an new array board.
+  def reveal
+    reveal_service = Game::RevealService.new(reveal_params)
+    reveal_service.process
+
+    board_builder = Game::BoardBuilder.new(reveal_params['game_id'])
+    board_builder.build
+    binding.pry
+
+    render json: { board: board_builder.result }
+  rescue
+    render json: { error: 'Cannot reveal that coordinates' }, status: :bad_request
+  end
+
   # POST /api/v1/games
   #
   # receives an game object and creates it,
@@ -39,6 +56,10 @@ class Api::V1::GamesController < ApplicationController
   end
 
   private
+
+  def reveal_params
+    params.permit!
+  end
 
   def game_params
     params
