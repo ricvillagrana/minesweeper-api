@@ -6,6 +6,8 @@ class Game::BoardBuilder
   end
 
   def build
+    return blank_board if @game.cells.size.zero?
+
     @result = rows_range.map do |r|
       cols_range.map do |c|
         @game.cells.find_by(coord: [r, c]).state
@@ -14,6 +16,10 @@ class Game::BoardBuilder
   end
 
   private
+
+  def blank_board
+    @result = Array.new(@game.rows, Array.new(@game.cols, :hidden))
+  end
 
   def rows_range
     (0..@game.rows - 1)
