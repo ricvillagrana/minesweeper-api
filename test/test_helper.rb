@@ -3,6 +3,9 @@ SimpleCov.start :rails
 
 SimpleCov.configure do
   load_adapter 'test_frameworks'
+
+  add_group('Services', 'app/services')
+  add_group('Builders', 'app/builders')
 end
 
 ENV['RAILS_ENV'] ||= 'test'
