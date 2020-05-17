@@ -20,13 +20,23 @@ class Api::V1::GamesController < ApplicationController
   # receives an cell coord, a game_id and reveal it,
   # returns an new array board.
   def reveal
-    reveal_service = Game::RevealService.new(reveal_params)
+    reveal_service = Game::RevealService.new(permitted_params)
     reveal_service.process
 
-    board_builder = Game::BoardBuilder.new(reveal_params['game_id'])
-    board_builder.build
+    render json: { board: board_game }
+  rescue
+    render json: { error: 'Cannot reveal that coordinates' }, status: :bad_request
+  end
 
-    render json: { board: board_builder.result }
+  # POST /api/v1/games/flag
+  #
+  # receives an cell coord, a game_id and flag it,
+  # returns an new array board.
+  def flag
+    flag_service = Game::FlagService.new(permitted_params)
+    flag_service.process
+
+    render json: { board: board_game }
   rescue
     render json: { error: 'Cannot reveal that coordinates' }, status: :bad_request
   end
@@ -56,7 +66,7 @@ class Api::V1::GamesController < ApplicationController
 
   private
 
-  def reveal_params
+  def permitted_params
     params.permit!
   end
 
@@ -64,5 +74,10 @@ class Api::V1::GamesController < ApplicationController
     params
       .require(:game)
       .permit(:bombs, :cols, :rows)
+  end
+
+  def board_game
+    board_builder = Game::BoardBuilder.new(permitted_params['game_id'])
+    board_builder.build
   end
 end

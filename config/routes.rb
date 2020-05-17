@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       resources :games
 
       post '/games/reveal', to: 'games#reveal'
+      post '/games/flag',   to: 'games#flag'
     end
   end
 end
