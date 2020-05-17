@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
       post '/games/:id/reveal', to: 'games#reveal'
       post '/games/:id/flag',   to: 'games#flag'
+      post '/games/:id/unflag', to: 'games#unflag'
     end
   end
 end

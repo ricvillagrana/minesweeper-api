@@ -42,7 +42,20 @@ class Api::V1::GamesController < ApplicationController
 
     render json: { board: board_game }
   rescue
-    render json: { error: 'Cannot reveal that coordinates' }, status: :bad_request
+    render json: { error: 'Cannot flag that coordinates' }, status: :bad_request
+  end
+
+  # POST /api/v1/games/:id/unflag
+  #
+  # receives an cell coord, an id and unflag it,
+  # returns an new array board.
+  def unflag
+    unflag_service = Game::UnflagService.new(permitted_params)
+    unflag_service.process
+
+    render json: { board: board_game }
+  rescue
+    render json: { error: 'Cannot unflag that coordinates' }, status: :bad_request
   end
 
   # POST /api/v1/games

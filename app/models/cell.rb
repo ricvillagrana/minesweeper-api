@@ -22,6 +22,11 @@ class Cell < ApplicationRecord
     update!(state: :flag)
   end
 
+  # Changes the state to :hidden if it's :flag.
+  def unflag!
+    update!(state: :hidden) if flag?
+  end
+
   # Updates state to :exploded_bomb or bomb_neighbors_count
   # if bomb_neighbors_count is 0, it also evaluates them.
   def reveal!
