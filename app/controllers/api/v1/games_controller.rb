@@ -20,22 +20,9 @@ class Api::V1::GamesController < ApplicationController
   # receives an game object and creates it,
   # returns an object with key +game+ containing the created game.
   def create
-    @game = current_user.games.create(game_params)
+    @game = current_user.games.create(game_params.merge(result: :playing))
 
     render json: { game: @game }
-  end
-
-  # PUT /api/v1/games/:id
-  #
-  # receives an game object and updates it by its id,
-  # returns an object with key +game+ containing the updated game.
-  def update
-    @game = current_user.games.find(params[:id])
-
-    @game.update!(game_params)
-    render json: { game: @game }
-  rescue
-    render json: { errors: @game.errors }, status: :bad_request
   end
 
   # DELETE /api/v1/games/:id
@@ -56,6 +43,6 @@ class Api::V1::GamesController < ApplicationController
   def game_params
     params
       .require(:game)
-      .permit(:name, :gamename)
+      .permit(:bombs, :cols, :rows)
   end
 end
