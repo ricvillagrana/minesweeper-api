@@ -39,4 +39,43 @@ class Api::V1::GamesControllerTest < ActionDispatch::IntegrationTest
     delete api_v1_game_url(game.id), headers: { 'User-ID': @user.id }
     assert_equal(response.parsed_body['game']['id'], game.id)
   end
+
+  test 'POST /games/:id/reveal reveals the cell' do
+    game = @user.games.create(bombs: 20, result: :playing)
+    game.reveal!(0, 0)
+    cell = game.cells.sample
+
+    post api_v1_game_url(game.id) + '/reveal',
+      params: { coord: cell.coord },
+      headers: { 'User-ID': @user.id }
+    assert_equal(response.parsed_body['board'].size, game.rows)
+    assert_equal(response.parsed_body['board'][0].size, game.cols)
+  end
+
+  test 'POST /games/:id/flag flags the cell' do
+    game = @user.games.create(bombs: 20, result: :playing)
+    game.reveal!(0, 0)
+    cell = game.cells.sample
+
+    post api_v1_game_url(game.id) + '/flag',
+      params: { coord: cell.coord },
+      headers: { 'User-ID': @user.id }
+
+    response_cell_status = response.parsed_body['board'][cell.coord[0]][cell.coord[1]]
+    assert_equal('flag', response_cell_status)
+  end
+
+  test 'POST /games/:id/unflag unflags the cell' do
+    game = @user.games.create(bombs: 20, result: :playing)
+    game.reveal!(0, 0)
+    cell = game.cells.sample
+    cell.flag!
+
+    post api_v1_game_url(game.id) + '/unflag',
+      params: { coord: cell.coord },
+      headers: { 'User-ID': @user.id }
+
+    response_cell_status = response.parsed_body['board'][cell.coord[0]][cell.coord[1]]
+    assert_equal('hidden', response_cell_status)
+  end
 end

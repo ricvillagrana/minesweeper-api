@@ -28,7 +28,7 @@ class Game < ApplicationRecord
   end
 
   def cell(x, y)
-    cells.find_by(coord: [x, y])
+    cells.find_by(coord: [x.to_i, y.to_i])
   end
 
 
