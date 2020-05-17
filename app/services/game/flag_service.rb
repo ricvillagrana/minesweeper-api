@@ -1,6 +1,6 @@
 class Game::FlagService
   def initialize(params)
-    @game  = Game.find(params['game_id'])
+    @game  = Game.find(params['id'])
     @coord = params['coord']
   end
 

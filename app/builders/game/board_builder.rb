@@ -1,8 +1,8 @@
 class Game::BoardBuilder
   attr_reader :result
 
-  def initialize(game_id)
-    @game = Game.where(id: game_id).first
+  def initialize(id)
+    @game = Game.where(id: id).first
   end
 
   def build

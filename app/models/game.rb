@@ -11,7 +11,7 @@ class Game < ApplicationRecord
   def reveal!(x, y)
     c = cell(x, y)
 
-    populate_bombs!(c) if cells.all?(&:hidden?)
+    init_board(c) if cells.all?(&:hidden?)
     c.reveal!
   end
 
@@ -41,6 +41,11 @@ class Game < ApplicationRecord
   end
 
   private
+
+  def init_board(cell)
+    populate_bombs!(cell)
+    timers.new.start
+  end
 
   def populate_cells
     rows.times do |row|

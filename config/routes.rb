@@ -4,8 +4,8 @@ Rails.application.routes.draw do
       resources :users
       resources :games
 
-      post '/games/:game_id/reveal', to: 'games#reveal'
-      post '/games/:game_id/flag',   to: 'games#flag'
+      post '/games/:id/reveal', to: 'games#reveal'
+      post '/games/:id/flag',   to: 'games#flag'
     end
   end
 end
