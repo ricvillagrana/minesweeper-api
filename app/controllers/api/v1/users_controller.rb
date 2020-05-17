@@ -30,11 +30,10 @@ class Api::V1::UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
 
-    if @user.update!(user_params)
-      render json: { user: @user }
-    else
-      render json: { errors: @user.errors }, status: :bad_request
-    end
+    @user.update!(user_params)
+    render json: { user: @user }
+  rescue
+    render json: { errors: @user.errors }, status: :bad_request
   end
 
   # DELETE /api/v1/users/:id
@@ -44,11 +43,10 @@ class Api::V1::UsersController < ApplicationController
   def destroy
     @user = User.find(params[:id])
 
-    if @user.destroy
-      render json: { user: @user }
-    else
-      render json: { errors: @user.errors }, status: :bad_request
-    end
+    @user.destroy
+    render json: { user: @user }
+  rescue
+    render json: { errors: @user.errors }, status: :bad_request
   end
 
   private
