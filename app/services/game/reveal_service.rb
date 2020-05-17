@@ -5,10 +5,6 @@ class Game::RevealService
   end
 
   def process
-    @game.send(action, @coord[0], @coord[1])
-  end
-
-  def action
-    @game.cells.all?(&:hidden?) ? :start_on! : :reveal!
+    @game.reveal!(@coord[0], @coord[1])
   end
 end

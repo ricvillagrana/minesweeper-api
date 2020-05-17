@@ -8,19 +8,11 @@ class Game < ApplicationRecord
 
   after_create :populate_cells
 
-  def start_on!(x, y)
-    return false unless cells.all?(&:hidden?)
-
-    initial_cell = cell(x, y)
-
-    initial_cell.update!(state: :flag)
-    populate_bombs!
-    initial_cell.update!(state: :hidden)
-    initial_cell.reveal!
-  end
-
   def reveal!(x, y)
-    cell(x, y).reveal!
+    c = cell(x, y)
+
+    populate_bombs!(c) if cells.all?(&:hidden?)
+    c.reveal!
   end
 
   def flag!(x, y)
@@ -58,10 +50,13 @@ class Game < ApplicationRecord
     end
   end
 
-  def populate_bombs!
+  def populate_bombs!(initial_cell)
     if bomb_cells.count < bombs
       bombs.times do
-        cells.where(bomb: false, state: :hidden).sample.update!(bomb: true)
+        cells
+          .where(bomb: false, state: :hidden)
+          .where.not(id: initial_cell.id)
+          .sample.update!(bomb: true)
       end
     end
   end

@@ -14,19 +14,19 @@ class GameTest < ActiveSupport::TestCase
   end
 
   test 'the games is populated with bombs after first reveal' do
-    @game.start_on!(3, 3)
+    @game.reveal!(3, 3)
 
     assert_equal(@game.bomb_cells.count, @game.bombs)
   end
 
-  test 'the games won\'t populate again if start_on! is used again' do
-    @game.start_on!(3, 4)
+  test 'the games won\'t populate again if reveal! is used again' do
+    @game.reveal!(3, 4)
 
     assert_equal(@game.bomb_cells.count, @game.bombs)
   end
 
   test 'the method reveal! delegates to cell' do
-    @game.start_on!(3, 3)
+    @game.reveal!(3, 3)
     @game.reveal!(5, 5)
 
     assert_not @game.cell(5, 5).hidden?
