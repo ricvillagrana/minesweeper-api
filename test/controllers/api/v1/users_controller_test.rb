@@ -45,7 +45,7 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'DELETE /users/:id deletes the user' do
-    user = User.all.sample
+    user = User.create(name: 'John', username: 'unique_one')
 
     delete api_v1_user_url(user.id)
     assert_equal(response.parsed_body['user']['name'], user.name)
