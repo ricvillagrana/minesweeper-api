@@ -19,6 +19,10 @@ class Game < ApplicationRecord
     cell(x, y).flag!
   end
 
+  def unflag!(x, y)
+    cell(x, y).unflag!
+  end
+
   def state(x, y)
     cell(x, y).state
   end
@@ -44,7 +48,7 @@ class Game < ApplicationRecord
 
   def init_board(cell)
     populate_bombs!(cell)
-    timers.new.start
+    timers.new.start!
   end
 
   def populate_cells
