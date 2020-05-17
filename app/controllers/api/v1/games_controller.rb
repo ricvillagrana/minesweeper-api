@@ -25,7 +25,6 @@ class Api::V1::GamesController < ApplicationController
 
     board_builder = Game::BoardBuilder.new(reveal_params['game_id'])
     board_builder.build
-    binding.pry
 
     render json: { board: board_builder.result }
   rescue
