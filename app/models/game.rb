@@ -84,11 +84,11 @@ class Game < ApplicationRecord
 
   def populate_bombs!(initial_cell)
     if bomb_cells.count < bombs
-      bombs = cells
+      random_cells = cells
         .where.not(id: initial_cell.id)
-        .order('RANDOM() LIMIT 10')
+        .order("RANDOM() LIMIT #{bombs}")
 
-      bombs.update_all(bomb: true)
+      random_cells.update_all(bomb: true)
     end
   end
 end
