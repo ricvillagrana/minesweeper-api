@@ -38,6 +38,7 @@ class Cell < ApplicationRecord
     neighbors
       .select { |n| !n.nil? }
       .each(&:reveal!) if bomb_neighbors_count.zero?
+    game.evaluate!
   end
 
   # Returns the number of neighbors that are a bomb.

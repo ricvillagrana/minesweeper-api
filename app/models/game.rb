@@ -44,7 +44,30 @@ class Game < ApplicationRecord
     end
   end
 
+  def win!
+    update!(result: :winner)
+  end
+
+  def evaluate!
+    if all_cells_revealed? && no_bombs?
+      win!
+    end
+  end
+
+
   private
+
+  def all_cells_revealed?
+    cells.where(bomb: false).none? do |cell|
+      cell.state.in? [:hidden, :flag]
+    end
+  end
+
+  def no_bombs?
+    cells.where(bomb: true).all? do |cell|
+      cell.state.in? [:hidden, :flag]
+    end
+  end
 
   def init_board(cell)
     populate_bombs!(cell)
@@ -62,7 +85,6 @@ class Game < ApplicationRecord
   def populate_bombs!(initial_cell)
     if bomb_cells.count < bombs
       bombs.times do
-        cells
           .where(bomb: false, state: :hidden)
           .where.not(id: initial_cell.id)
           .sample.update!(bomb: true)
