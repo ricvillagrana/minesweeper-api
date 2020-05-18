@@ -13,6 +13,17 @@ class Api::V1::UsersController < ApplicationController
     render json: { user: User.find(params[:id]) }
   end
 
+  # POST /api/v1/games/:username
+  #
+  # return a new user with passed username or an existing one.
+  def sign_in
+    user = User.find_or_create_by(username: user_params['username'])
+
+    render json: { user: user }
+  rescue
+    render json: { error: 'Error on sign in' }, status: :bad_request
+  end
+
   # POST /api/v1/users
   #
   # receives an user object and creates it,

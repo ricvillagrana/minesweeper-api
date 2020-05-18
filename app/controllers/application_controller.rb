@@ -8,7 +8,7 @@ class ApplicationController < ActionController::API
   end
 
   def current_user
-    user_id = request.headers['User-ID']
+    user_id = request.headers['Authorization']
 
     User.where(id: user_id).first
   end
