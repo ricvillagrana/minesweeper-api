@@ -17,7 +17,7 @@ class Api::V1::UsersController < ApplicationController
   #
   # return a new user with passed username or an existing one.
   def sign_in
-    user = User.find_or_create_by(username: user_params['username'])
+    user = User.find_or_create_by(user_params)
 
     render json: { user: user }
   rescue

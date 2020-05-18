@@ -6,7 +6,7 @@ class Api::V1::GamesController < ApplicationController
   #
   # returns an object with key +games+ containing an array of games.
   def index
-    render json: { games: current_user.games }
+    render json: { games: current_user.games.order(created_at: :desc) }
   end
 
   # GET /api/v1/games/:id
@@ -68,8 +68,10 @@ class Api::V1::GamesController < ApplicationController
   # returns an object with key +game+ containing the created game.
   def create
     @game = current_user.games.create(game_params.merge(result: :playing))
+    board_builder = Game::BoardBuilder.new(@game.id)
+    board_builder.build
 
-    render json: { game: @game }
+    render json: { game: @game, board: board_builder.result }
   end
 
   # DELETE /api/v1/games/:id
