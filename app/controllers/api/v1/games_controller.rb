@@ -1,5 +1,6 @@
 class Api::V1::GamesController < ApplicationController
   before_action :verify_user!
+  before_action :fetch_game, only: %i[show destroy]
 
   # GET /api/v1/games
   #
@@ -14,7 +15,7 @@ class Api::V1::GamesController < ApplicationController
   # that contains the board.
   def show
     render json: {
-      game: current_user.games.find(params[:id]),
+      game: @game,
       board: board_game
     }
   end
@@ -26,8 +27,9 @@ class Api::V1::GamesController < ApplicationController
   def reveal
     reveal_service = Game::RevealService.new(permitted_params)
     reveal_service.process
+    @game = current_user.games.find(params[:id])
 
-    render json: { board: board_game }
+    render json: { board: board_game, game: @game }
   rescue
     render json: { error: 'Cannot reveal that coordinates' }, status: :bad_request
   end
@@ -39,8 +41,9 @@ class Api::V1::GamesController < ApplicationController
   def flag
     flag_service = Game::FlagService.new(permitted_params)
     flag_service.process
+    @game = current_user.games.find(params[:id])
 
-    render json: { board: board_game }
+    render json: { board: board_game, game: @game }
   rescue
     render json: { error: 'Cannot flag that coordinates' }, status: :bad_request
   end
@@ -52,8 +55,9 @@ class Api::V1::GamesController < ApplicationController
   def unflag
     unflag_service = Game::UnflagService.new(permitted_params)
     unflag_service.process
+    @game = current_user.games.find(params[:id])
 
-    render json: { board: board_game }
+    render json: { board: board_game, game: @game }
   rescue
     render json: { error: 'Cannot unflag that coordinates' }, status: :bad_request
   end
@@ -73,8 +77,6 @@ class Api::V1::GamesController < ApplicationController
   # receives an game id and destroys it by its id,
   # returns an object with key +game+ containing the deleted game.
   def destroy
-    @game = current_user.games.find(params[:id])
-
     @game.destroy
     render json: { game: @game }
   rescue
@@ -96,5 +98,9 @@ class Api::V1::GamesController < ApplicationController
   def board_game
     board_builder = Game::BoardBuilder.new(permitted_params['id'])
     board_builder.build
+  end
+
+  def fetch_game
+    @game = current_user.games.find(params[:id])
   end
 end
