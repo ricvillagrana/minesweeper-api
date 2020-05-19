@@ -32,12 +32,12 @@ class Cell < ApplicationRecord
   def reveal!
     return unless hidden?
 
-    new_state = bomb ? :exploded_bomb : bomb_neighbors_count
+    new_state = bomb ? :exploded_bomb : bombs_count
     update!(state: new_state)
 
     neighbors
-      .select { |n| !n.nil? }
-      .each(&:reveal!) if bomb_neighbors_count.zero?
+      .select { |n| !n.nil? && n.state == 'hidden' }
+      .each(&:reveal!) if bombs_count.zero?
     game.evaluate!
   end
 
@@ -48,13 +48,14 @@ class Cell < ApplicationRecord
 
   # Returns neighbors instances or nil.
   def neighbors
-    neighbors = neighbors_ranges[:x].flat_map do |x|
-      neighbors_ranges[:y].flat_map do |y|
-        game.cells.find_by(coord: [x, y])
+    coords = neighbors_ranges[:x].map do |x|
+      neighbors_ranges[:y].map do |y|
+        [x, y]
       end
     end
 
-    neighbors.filter { |neighbor| neighbor != self }
+    coords.flatten!(1).filter! { |c| c != coord }
+    game.cells.select { |c| c.coord.in?(coords) }
   end
 
   def hidden?

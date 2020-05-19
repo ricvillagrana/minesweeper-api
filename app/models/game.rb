@@ -6,7 +6,7 @@ class Game < ApplicationRecord
   validates :result, inclusion: { in: %w(playing winner looser) }
   validates :bombs, numericality: { greater_than: 1 }
 
-  after_create :populate_cells
+  after_create :populate_cells!
 
   def reveal!(x, y)
     c = cell(x, y)
@@ -54,7 +54,6 @@ class Game < ApplicationRecord
     end
   end
 
-
   private
 
   def all_cells_revealed?
@@ -74,7 +73,7 @@ class Game < ApplicationRecord
     timers.new.start!
   end
 
-  def populate_cells
+  def populate_cells!
     rows.times do |row|
       cols.times do |col|
         cells.create(coord: [row, col])
@@ -86,9 +85,13 @@ class Game < ApplicationRecord
     if bomb_cells.count < bombs
       random_cells = cells
         .where.not(id: initial_cell.id)
-        .order("RANDOM() LIMIT #{bombs}")
+        .order("RANDOM()")
+        .limit(bombs)
 
-      random_cells.update_all(bomb: true)
+      random_cells.each do |cell|
+        cell.update!(bomb: true)
+        cell.neighbors.each { |n| n.increment!(:bombs_count) }
+      end
     end
   end
 end
