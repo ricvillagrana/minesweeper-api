@@ -8,7 +8,9 @@ class Cell < ApplicationRecord
   }
   validates_each :coord do |record, attr, value|
     record.errors.add(attr, 'aready taken')\
-      unless record.neighbors.select { |n| n&.coord == value }.empty?
+      if !record.persisted? && !record.game.cells.select do |n|
+        n&.coord == value
+      end.empty?
 
     unless value.is_a?(Array) && value.length == 2
       record.errors.add(attr, 'should be an Array of length of 2')
@@ -36,9 +38,9 @@ class Cell < ApplicationRecord
     update!(state: new_state)
 
     neighbors
-      .select { |n| !n.nil? && n.state == 'hidden' }
+      .select { |n| !n.nil? && n.state == 'hidden' && !n.bomb }
       .each(&:reveal!) if bombs_count.zero?
-    game.evaluate!
+    game.evaluate! if game.no_hidden_but_bombs?
   end
 
   # Returns the number of neighbors that are a bomb.
@@ -54,7 +56,7 @@ class Cell < ApplicationRecord
       end
     end
 
-    coords.flatten!(1).filter! { |c| c != coord }
+    coords.flatten!(1)
     game.cells.select { |c| c.coord.in?(coords) }
   end
 

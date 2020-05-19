@@ -9,10 +9,9 @@ class Game < ApplicationRecord
   after_create :populate_cells!
 
   def reveal!(x, y)
-    c = cell(x, y)
+    init_board(cell(x, y)) if cells.all?(&:hidden?)
 
-    init_board(c) if cells.all?(&:hidden?)
-    c.reveal!
+    cell(x, y).reveal!
   end
 
   def flag!(x, y)
@@ -51,7 +50,12 @@ class Game < ApplicationRecord
   def evaluate!
     if all_cells_revealed? && no_bombs?
       win!
+      timers.last.stop!
     end
+  end
+
+  def no_hidden_but_bombs?
+    cells.where(state: 'hidden', bomb: false).count.zero?
   end
 
   private
@@ -64,7 +68,7 @@ class Game < ApplicationRecord
 
   def no_bombs?
     cells.where(bomb: true).all? do |cell|
-      cell.state.in? [:hidden, :flag]
+      cell.state.in? ['hidden', 'flag']
     end
   end
 
@@ -85,8 +89,7 @@ class Game < ApplicationRecord
     if bomb_cells.count < bombs
       random_cells = cells
         .where.not(id: initial_cell.id)
-        .order("RANDOM()")
-        .limit(bombs)
+        .sample(bombs)
 
       random_cells.each do |cell|
         cell.update!(bomb: true)
