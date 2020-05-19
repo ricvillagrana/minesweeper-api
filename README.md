@@ -10,5 +10,6 @@ Minesweeper game API built in Ruby on Rails.
 
 ## Concerns
 Here are some known issues.
+- I did not follow GitFlow due to I am working on this alone, but the ideal way to work is by following the Git [Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow).
 - Sessions are not handled securetly (just by giving a username you could access to another person games).
 - The timer is working but was not implemented on the UI.
